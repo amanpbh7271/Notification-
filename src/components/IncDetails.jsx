@@ -52,6 +52,7 @@ export default function IncDetails({ data, handleCloseInc }) {
   const handleBusinessImpact = (e) => setBusinessImpact(e.target.value);
   const handleWorkAround = (e)=> setWorkAround(e.target.value);
   const handleStatus = (e)=> setStatus(e.target.value);
+  const hadnlenotificationManager = (e) => setNotificationManager(e.target.value);
 
   // Event handlers for input changes
   //const handleNameChange = (e) => setName(e.target.value);
@@ -86,7 +87,8 @@ export default function IncDetails({ data, handleCloseInc }) {
       <CrossIcon onClick={handleCloseInc}>X</CrossIcon>
       
       <Form style={{ marginTop: '20px'}}>
-        <Row className="mb-3">
+     
+          <Row className="mb-3">
           <Col>
             <Form.Label>Inc Number</Form.Label>
             <Form.Control type="text" value={incNumber} />
@@ -134,11 +136,11 @@ export default function IncDetails({ data, handleCloseInc }) {
         <Row className="mb-3">
           <Col>
             <Form.Label>Notification Manager</Form.Label>
-            <Form.Select custom >
-              <option defaultValue="" disabled>Please Select</option>
-              <option value="1">{notificationManager}</option>
-              <option value="2">Amar</option>
-              <option value="3">Sachin</option>
+            <Form.Select  value={notificationManager} onChange={hadnlenotificationManager}>
+              <option value="" disabled>please select</option>
+              <option value="Bharti">Bharti</option>
+              <option value="Amar">Amar</option>
+              <option value="Sachin">Sachin</option>
             </Form.Select>
           </Col>
           <Col>
@@ -152,7 +154,7 @@ export default function IncDetails({ data, handleCloseInc }) {
         </Row>
         <Row className="mb-3">
           <Col>
-          <Form.Label>Bridge deatils</Form.Label>
+          <Form.Label>Bridge details</Form.Label>
           <Form.Control type="text" value={bridgeDeatils} onChange={handleBridgeDeatils}/>
           </Col>
           <Col>

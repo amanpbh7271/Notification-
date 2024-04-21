@@ -2,10 +2,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import '../styles/LoginForm.css';
-import Notification from './Notification.jsx'; 
+import Notifications from './Notifications.jsx'; 
 import { useParams,useNavigate } from 'react-router-dom';
 import amodocs from './amdocs.png';
-
+import DesktopNotification from './DesktopNotification.jsx';
+import WhatsAppQRCode from './WhatsAppQRCode.js';
 const Container = styled.div`
   background-color: #D3D3D3;
 `;
@@ -43,11 +44,12 @@ function LoginForm() {
  
   return (
     <Container >
-    
+      
       <Header>
       <HeaderContent>Incident Notifications</HeaderContent>
       <HeaderContent>Join Incident Bridge</HeaderContent>
       </Header>
+
       <div className="login-form-container" style={{ marginTop: '100px' }}>
       <img src={amodocs} alt="Logo" className="login-logo" />
       <form onSubmit={handleSubmit}>

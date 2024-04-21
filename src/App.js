@@ -6,7 +6,7 @@ import IncidentForm from './components/IncidentForm.js';
 import { Route } from 'react-router-dom/dist/index.js';
 import LoginForm from './components/LoginForm.js';
 import SendNotification from './components/SendNotification.js';
-import Notification from './components/Notification.jsx'
+import Notifications from './components/Notifications.jsx'
 import Whatsapp from './components/Whatsapp.jsx';
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
        <Route path="/"  element={<LoginForm/>} />
         <Route path="/IncidentForm" element={<IncidentForm/>} />
         <Route path="/SendNotification" element={<SendNotification/>} />
-        <Route path="/Notification" element={<Notification/>}/>
+        <Route path="/Notifications" element={<Notifications/>}/>
         <Route path='/LoginForm' element={<LoginForm/>} />
         <Route path='/Whatsapp' element={<Whatsapp/>}/>
         </Routes>
