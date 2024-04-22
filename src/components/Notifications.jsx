@@ -215,12 +215,11 @@ export default function Notifications() {
         const incNumbers = filteredIncidents
           .map((incident) => incident.IncNumber)
           .join(", ");
-       // alert("Open Incidents for {userData.userName}: ${incNumbers}");
        // alert("these INC are in opened state  "+incNumbers);
        //new Notification("Hello World");
        new Notification("these INC are in opened state  "+incNumbers);
       }
-    }, 1 * 6 * 1000); // 1 minute in milliseconds
+    }, 52 * 6 * 1000); // 1 minute in milliseconds
 
     return () => clearInterval(timer); // Cleanup function to clear the timer
   }, []); // Empty dependency array, effect runs only once
@@ -243,7 +242,7 @@ export default function Notifications() {
             onChange={handleSearch}
           />
         <Button onClick={ raiseNewInc }>New INC</Button>
-          <ListOfInc>
+          <ListOfInc style={{ height: "500px", overflow: "auto" }}>
             {searchTerm === ""
               ? IncDetailsData.map((item) => (
                   <ParticularInc

@@ -23,9 +23,19 @@ const IncidentForm = ({ raiseNewInc }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [whatsapp, Setwhatsapp] = useState(false);
   const [autoFocusField, setAutoFocusField] = useState("incNumber");
-  const phoneNumber = "7772980155"; // Replace with your WhatsApp phone number
-  const data = ("Below Are Details for raised INC" + "\n" + "incNumber:- " + incNumber + "\n" + "bridgeDeatils:-" + bridgeDeatils); // Replace with your message or data
-
+  const phoneNumber = "7772980155"; //8527289988 Replace with your WhatsApp phone number
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const [issueOwnedBy,setIssueOwnedBy] =useState("");
+  const formattedDate = currentDateTime.toLocaleDateString(); // Get formatted date
+  const formattedTime = currentDateTime.toLocaleTimeString(); // Get formatted time
+  const boldText = `<strong>This text is bold</strong>`;
+  const data = ("Below are Details for raised INC" + "\n" + "IncNumber:- " + incNumber +"\nAccount :-"+account +
+  "\nUpdated/next Status:-"+statusupdate+"\nStatus:-" + status+
+  "\nBusiness impact:-"+businessImpact + "\nWork Around:-"+workAround +
+  "\nNotification Manager:-"+ notificationManager+"\nIssue Owned By:-"+issueOwnedBy+
+   "\n"+"bridgeDeatils:-" + bridgeDeatils+"\nDate:-"+ formattedDate+"\nTime:-"+ formattedTime); // Replace with your message or data
+ 
+  
 
 
   const switchFocus = (field) => {
@@ -35,6 +45,26 @@ const IncidentForm = ({ raiseNewInc }) => {
     e.preventDefault();
     e.stopPropagation();
     setIncNumber(e.target.value);
+  };
+  const HandleIssueOwnedBy = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIssueOwnedBy(e.target.value);
+  };
+
+
+  
+  const handlenotificationManager = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setNotificationManager(e.target.value);
+  };
+  
+  
+  const handleAccount = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setAccount(e.target.value);
   };
   
   const handleAccountChange = (e) => {
@@ -73,11 +103,6 @@ const IncidentForm = ({ raiseNewInc }) => {
   //  const inputRef = useRef(null);
 
 
-  const handleChange = (event) => {
-    setSelectedOption(event.target.value);
-
-  };
-
 
   function openLoginForm() {
     SetLoginForm(!loginForm);
@@ -93,6 +118,7 @@ const IncidentForm = ({ raiseNewInc }) => {
     //WhatsAppQRCode(7772980155,"jkll");
     //<WhatsAppQRCode phoneNumber={7772980155} data={"hello  hjk"} />
     // alert("hell");
+    setCurrentDateTime(new Date());
     SetLoginForm(!loginForm);
     Setwhatsapp(!whatsapp);
   };
@@ -177,15 +203,20 @@ const IncidentForm = ({ raiseNewInc }) => {
                 onChange={handleIncNumber}
                 autoFocus={autoFocusField === "incNumber"}
                   onFocus={() => switchFocus("incNumber")}
-
+                 required
               />
             </Col>
             <Col>
               <Form.Label>Account</Form.Label>
-              <Form.Select custom>
+              <Form.Select custom 
+              value={account}
+              onChange={handleAccount}
+              autoFocus={autoFocusField === "setAccount"}
+                onFocus={() => switchFocus("setAccount")}>
+
                 <option value="" disabled>Please select</option>
-                <option value="1">Three Ireland</option>
-                <option value="2">UK</option>
+                <option value="Three Ireland">Three Ireland</option>
+                <option value="UK">UK</option>
 
               </Form.Select>
             </Col>
@@ -204,9 +235,13 @@ const IncidentForm = ({ raiseNewInc }) => {
             </Col>
             <Col>
               <Form.Label>Add Status Update</Form.Label>
-              <Form.Select custom onChange={handleChange}>
+              <Form.Select custom value={status}
+              onChange={handleStatus}
+              autoFocus={autoFocusField === "setStatus"}
+                onFocus={() => switchFocus("setStatus")}
+                >
                 <option value="" disabled>Please select</option>
-                <option value="1">Open</option>
+                <option value="Open">Open</option>
 
               </Form.Select>
 
@@ -220,11 +255,23 @@ const IncidentForm = ({ raiseNewInc }) => {
               <Form.Label>Business Impact</Form.Label>
               <Form.Control type="text" placeholder="Wnter Business Impact"
 
+value={businessImpact}
+onChange={handleBusinessImpact}
+
+autoFocus={autoFocusField === "businessImpact"}
+  onFocus={() => switchFocus("businessImpact")}
+
               />
             </Col>
             <Col>
               <Form.Label>Work around</Form.Label>
-              <Form.Control type="text" placeholder="Enter Work around" />
+              <Form.Control type="text" placeholder="Enter Work around" 
+              value={workAround}
+              onChange={handleWorkAround}
+              
+              autoFocus={autoFocusField === "workAround"}
+                onFocus={() => switchFocus("workAround")}
+              />
             </Col>
 
           </Row>
@@ -232,19 +279,29 @@ const IncidentForm = ({ raiseNewInc }) => {
           <Row className="mb-3">
             <Col>
               <Form.Label>Notification Manager</Form.Label>
-              <Form.Select custom>
+              <Form.Select custom 
+              value={notificationManager}
+              onChange={handlenotificationManager}
+              autoFocus={autoFocusField === "notificationManager"}
+                onFocus={() => switchFocus("notificationManager")}
+              >
                 <option value="" disabled>Please select</option>
-                <option value="1">Bharti</option>
-                <option value="2">Amar</option>
-                <option value="3">Sachin</option>
+                <option value="Bharti">Bharti</option>
+                <option value="Amar">Amar</option>
+                <option value="Amar">Sachin</option>
               </Form.Select>
             </Col>
             <Col>
               <Form.Label>Issue Owned By</Form.Label>
-              <Form.Select custom>
+              <Form.Select custom
+               value={issueOwnedBy}
+               onChange={HandleIssueOwnedBy}
+               autoFocus={autoFocusField === "issueOwnedBy"}
+                 onFocus={() => switchFocus("issueOwnedBy")}
+              >
                 <option value="" disabled>Please select</option>
-                <option value="1">Amdocs</option>
-                <option value="2">TechM</option>
+                <option value="Amdocs">Amdocs</option>
+                <option value="TechM">TechM</option>
               </Form.Select>
             </Col>
           </Row>
@@ -252,7 +309,12 @@ const IncidentForm = ({ raiseNewInc }) => {
             <Form.Label>Bridge deatils</Form.Label>
 
             <Form.Control type="text" placeholder="Enter Bridge deatils"
-              onChange={handleBridgeDeatils}
+                   value={bridgeDeatils}
+                   onChange={handleBridgeDeatils}
+                   
+                   autoFocus={autoFocusField === "bridgeDeatils"}
+                     onFocus={() => switchFocus("bridgeDeatils")}
+                
             />
           </Row>
           <Button variant="Primary" type="submit" className="btn btn-primary" >Submit Deatils</Button>

@@ -39,7 +39,7 @@ function LoginForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission
-    navigate("/Notification");
+    navigate("/Notifications");
   };
  
   return (
