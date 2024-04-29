@@ -3,8 +3,8 @@ import { Form, Row, Col } from 'react-bootstrap';
 import styled from "styled-components";
 import { Button, InputGroup, FormControl } from 'react-bootstrap';
 import QRCode from "qrcode.react";
-// import  {WhatsAppQRCode}  from './WhatsAppQRCode.js';
 
+import axios from 'axios';
 
 const IncidentForm = ({ raiseNewInc }) => {
 
@@ -23,14 +23,15 @@ const IncidentForm = ({ raiseNewInc }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [whatsapp, Setwhatsapp] = useState(false);
   const [autoFocusField, setAutoFocusField] = useState("incNumber");
-  const phoneNumber = "7772980155"; //8527289988 Replace with your WhatsApp phone number
+  const phoneNumber = "7772980155"; //8527289988 +353872484431Replace with your WhatsApp phone number
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
   const [issueOwnedBy,setIssueOwnedBy] =useState("");
   const formattedDate = currentDateTime.toLocaleDateString(); // Get formatted date
   const formattedTime = currentDateTime.toLocaleTimeString(); // Get formatted time
+  const [priority,setPriority] = useState("");
   const boldText = `<strong>This text is bold</strong>`;
-  const data = ("Below are Details for raised INC" + "\n" + "IncNumber:- " + incNumber +"\nAccount :-"+account +
-  "\nUpdated/next Status:-"+statusupdate+"\nStatus:-" + status+
+  const data = ("*Below are Details for raised INC*" + "\n" + "IncNumber:- *" + incNumber +"*\nAccount :-"+account +
+  "\nUpdated/next Status:-"+statusupdate+"\nStatus:-" + status+"P1"+
   "\nBusiness impact:-"+businessImpact + "\nWork Around:-"+workAround +
   "\nNotification Manager:-"+ notificationManager+"\nIssue Owned By:-"+issueOwnedBy+
    "\n"+"bridgeDeatils:-" + bridgeDeatils+"\nDate:-"+ formattedDate+"\nTime:-"+ formattedTime); // Replace with your message or data
@@ -67,6 +68,11 @@ const IncidentForm = ({ raiseNewInc }) => {
     setAccount(e.target.value);
   };
   
+  const handlePriorty = (e) =>{
+    e.preventDefault();
+    e.stopPropagation();
+    setPriority(e.target.value);
+  }
   const handleAccountChange = (e) => {
     setAccount(e.target.value);
   };
@@ -115,12 +121,31 @@ const IncidentForm = ({ raiseNewInc }) => {
     // Add your form submission logic here
     console.log('INC Number:', incNumber);
     console.log('Incident Details:', incidentDetails);
-    //WhatsAppQRCode(7772980155,"jkll");
-    //<WhatsAppQRCode phoneNumber={7772980155} data={"hello  hjk"} />
-    // alert("hell");
+    
+
+    axios({
+      method: 'post',
+      url: 'http://localhost:8080/api/saveInc',
+      data: {
+        "incNumber": incNumber,
+        "manager": notificationManager,
+        "date": formattedDate,
+        "time": formattedTime,
+        "bridgeDetails": bridgeDeatils,
+        "priority": "P1",
+        "nextUpdate": statusupdate,
+        "status": status
+      }
+    })
+    .then((response) => {
+      console.log(response);
+    }, (error) => {
+      console.log(error);
+    });
     setCurrentDateTime(new Date());
     SetLoginForm(!loginForm);
     Setwhatsapp(!whatsapp);
+
   };
 
 
@@ -158,12 +183,6 @@ const IncidentForm = ({ raiseNewInc }) => {
     // Construct your WhatsApp message link with the phone number and data
     return `https://wa.me/${phoneNumber}?text=${encodeURIComponent(data)}`;
   };
-
-  // const handleKeyDown =(e)=>
-  // {
-  //   e.preventDefault();
-  //   inputRef.current.focus();
-  // }
 
   const whatsappLink = generateWhatsAppLink();
   return (
@@ -306,6 +325,7 @@ autoFocus={autoFocusField === "businessImpact"}
             </Col>
           </Row>
           <Row className="mb-3">
+          <Col>
             <Form.Label>Bridge deatils</Form.Label>
 
             <Form.Control type="text" placeholder="Enter Bridge deatils"
@@ -316,6 +336,21 @@ autoFocus={autoFocusField === "businessImpact"}
                      onFocus={() => switchFocus("bridgeDeatils")}
                 
             />
+            </Col>
+            <Col>
+              <Form.Label>Priority</Form.Label>
+              <Form.Select custom
+               value={priority}
+               onChange={handlePriorty}
+               autoFocus={autoFocusField === "priority"}
+                 onFocus={() => switchFocus("priority")}
+              >
+                <option value="" disabled>Please select</option>
+                <option value="P1">P1</option>
+                <option value="P2">P2</option>
+              </Form.Select>
+              
+            </Col>
           </Row>
           <Button variant="Primary" type="submit" className="btn btn-primary" >Submit Deatils</Button>
         </Form>
@@ -326,6 +361,43 @@ autoFocus={autoFocusField === "businessImpact"}
           <h3>Scan QR Code to Send WhatsApp Message</h3>
           {/* Call the WhatsAppQRCode component with the phoneNumber and data props */}
           <QRCode value={whatsappLink} />
+          <h3>Below are submited details ....</h3>
+               <li >
+                <strong>{"incNumber"}:</strong> {incNumber}               
+              </li> 
+              <li >
+                <strong>{"account"}:</strong> {account}         
+              </li> 
+              <li >
+                <strong>{"nextUpdate"}:</strong> {statusupdate}         
+              </li> 
+              <li >
+                <strong>{"status"}:</strong> {status}         
+              </li> 
+              <li >
+                <strong>{"businessImpact"}:</strong> {businessImpact}         
+              </li> 
+              <li >
+                <strong>{"workAround"}:</strong> {workAround}         
+              </li> 
+              <li >
+                <strong>{"manager"}:</strong> {notificationManager}         
+              </li> 
+              <li >
+                <strong>{"issueOwnedBy"}:</strong> {issueOwnedBy}         
+              </li> 
+              <li >
+                <strong>{"bridgeDetails"}:</strong> {bridgeDeatils}         
+              </li> 
+              <li >
+                <strong>{"priority"}:</strong> {priority}         
+              </li> 
+              <li >
+                <strong>{"date"}:</strong> {formattedDate}         
+              </li> 
+              <li >
+                <strong>{"Time"}:</strong> {formattedTime}         
+              </li> 
         </div>)
       }
     </Container>

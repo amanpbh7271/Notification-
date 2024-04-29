@@ -3,7 +3,7 @@ import styled from "styled-components";
 import IncDetails from "./IncDetails.jsx";
 import { Button } from 'react-bootstrap';
 import IncidentForm from './IncidentForm.js';
-import DesktopNotification from './DesktopNotification.jsx';
+import axios from "axios";
 const Container = styled.div`
   background-color: #d3d3d3;
 `;
@@ -60,7 +60,8 @@ export default function Notifications() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [currentInc, setCurrentInc] = useState(null);
-  const [newInc,setNewInc] = useState(false)
+  const [newInc,setNewInc] = useState(false);
+  const [apiData, setApiData] = useState([]);
   const userData={
     userName:"Amar"
   }
@@ -157,17 +158,21 @@ export default function Notifications() {
     const value = event.target.value;
     setSearchTerm(value);
 
-    const filteredResults = IncDetailsData.filter((item) =>
-      item.IncNumber.toString().includes(value)
+    const filteredResults = apiData.filter((item) =>
+    item.notifications.incNumber.toString().includes(value)
     );
+   // const filteredData = apiData.filter(item => item.notifications.incNumber === incId);
     setSearchResults(filteredResults);
   };
 
   const handleCurrentInc = (incId) => {
-    const filteringCurrentInc = IncDetailsData.filter(
-      (detail) => detail.IncNumber === incId
-    );
-    setCurrentInc(filteringCurrentInc);
+    
+    console.log('apidata in handlecurretn inc' +apiData);
+
+    const filteredData = apiData.filter(
+       (item) => item.notifications.incNumber === incId);
+    setCurrentInc(filteredData);
+    console.log('filteringCurrentInc '+ filteredData);
   };
 
   const handleClearSearch = () => {
@@ -196,9 +201,40 @@ export default function Notifications() {
   //   return () => clearTimeout(timer);
   // }, []);
 
+
   useEffect(() => {
+     
+    async function fetchData() {
+      try {
+        const response = await fetch('http://localhost:8080/api/incDetailsForManager/Amar');
+        //await fetch('http://localhost:8080/api/incDetailsForManager/John Doe')
+        // /http://localhost:8080/api/logout/Sachin
+       // const parsedData = JSON.parse(response);
+        //const data = await response.json();
+       // alert(parsedData);
 
+      const clonedResponse = response.clone(); // Clone the response
+      const data = await clonedResponse.json();
+      setApiData(data);
 
+       return response.text();
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  
+    fetchData().then(data => {
+     
+      let fetchedData = data;
+
+     // setApiData(data);
+      console.log('Set APi data',apiData);
+      console.log('API Data:', data);
+     
+    }).catch(error => {
+      console.error('Error fetching data:', error);
+    });
+  
     const timer = setInterval(() => {
       // Filter the IncDetailsData based on conditions
       const filteredIncidents = IncDetailsData.filter((incident) => {
@@ -217,9 +253,9 @@ export default function Notifications() {
           .join(", ");
        // alert("these INC are in opened state  "+incNumbers);
        //new Notification("Hello World");
-       new Notification("these INC are in opened state  "+incNumbers);
+      new Notification("these INC are in opened state  "+incNumbers);
       }
-    }, 52 * 6 * 1000); // 1 minute in milliseconds
+    }, 50 * 6 * 1000); // 1 minute in milliseconds
 
     return () => clearInterval(timer); // Cleanup function to clear the timer
   }, []); // Empty dependency array, effect runs only once
@@ -231,7 +267,6 @@ export default function Notifications() {
       <Header>
         <HeaderContent>Incident Notifications</HeaderContent>
         <HeaderContent>Join Incident Bridge</HeaderContent>
-      
       </Header>
       <SearchAndContentWrp>
         <LeftContent>
@@ -244,24 +279,24 @@ export default function Notifications() {
         <Button onClick={ raiseNewInc }>New INC</Button>
           <ListOfInc style={{ height: "500px", overflow: "auto" }}>
             {searchTerm === ""
-              ? IncDetailsData.map((item) => (
+              ? Array.isArray(apiData) && apiData.map((notification) => (
                   <ParticularInc
-                    key={item.IncNumber}
-                    onClick={() => handleCurrentInc(item.IncNumber)}
+                    key={notification.notifications.incNumber}
+                    onClick={() => handleCurrentInc(notification.notifications.incNumber)}
                   >
-                    <ItemName>{item.Account}</ItemName>
-                    <ItemId>{item.IncNumber}</ItemId>
-                    <ItemPriority>{item.priority}</ItemPriority>
+                    <ItemName>{notification.notifications.incNumber}</ItemName>
+                    <ItemId>{notification.notifications.date}  {notification.notifications.time}</ItemId>
+                    <ItemPriority>{notification.notifications.priority}</ItemPriority>
                   </ParticularInc>
                 ))
-              : searchResults.map((item) => (
+              : Array.isArray(apiData) && searchResults.map((notification) => (
                   <ParticularInc
-                    key={item.IncNumber}
-                    onClick={() => handleCurrentInc(item.IncNumber)}
+                    key={notification.notifications.incNumber}
+                    onClick={() => handleCurrentInc(notification.notifications.incNumber)}
                   >
-                    <ItemName>{item.Account}</ItemName>
-                    <ItemId>{item.IncNumber}</ItemId>
-                    <ItemPriority>{item.priority}</ItemPriority>
+                    <ItemName>{notification.notifications.incNumber}</ItemName>
+                    <ItemId>{notification.notifications.incNumber}</ItemId>
+                    <ItemPriority>{notification.notifications.priority}</ItemPriority>
                   </ParticularInc>
                 ))}
           </ListOfInc>
@@ -272,6 +307,7 @@ export default function Notifications() {
             
           )}
           {newInc && <IncidentForm raiseNewInc={ raiseNewInc}/>}
+        
         </RightContent>
       </SearchAndContentWrp>
     </Container>

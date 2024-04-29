@@ -12,8 +12,3 @@ code {
     monospace;
 }
 
-body{
-  background: #f3c41a;
-  background: linear-gradient(135deg, rgb(235, 186, 25) 0%,     rgb(244, 79, 159) 100%);
-  font-family: "work sans";
-}

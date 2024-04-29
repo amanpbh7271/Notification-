@@ -8,7 +8,6 @@ import LoginForm from './components/LoginForm.js';
 import SendNotification from './components/SendNotification.js';
 import Notifications from './components/Notifications.jsx'
 import Whatsapp from './components/Whatsapp.jsx';
-
 function App() {
   return (
     

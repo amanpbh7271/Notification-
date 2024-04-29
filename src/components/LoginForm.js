@@ -39,6 +39,8 @@ function LoginForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission
+
+    
     navigate("/Notifications");
   };
  
