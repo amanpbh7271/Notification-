@@ -3,6 +3,7 @@ import styled from "styled-components";
 import IncDetails from "./IncDetails.jsx";
 import { Button } from 'react-bootstrap';
 import IncidentForm from './IncidentForm.js';
+import { useParams } from 'react-router-dom';
 import axios from "axios";
 const Container = styled.div`
   background-color: #d3d3d3;
@@ -62,9 +63,14 @@ export default function Notifications() {
   const [currentInc, setCurrentInc] = useState(null);
   const [newInc,setNewInc] = useState(false);
   const [apiData, setApiData] = useState([]);
+
+
+
+
   const userData={
     userName:"Amar"
   }
+
   const IncDetailsData=[
     {
    IncNumber:112312,
@@ -189,24 +195,16 @@ export default function Notifications() {
     //navigate("/IncidentForm");
   }
 
-  // useEffect(() => {
-  //   const showNotification = () => {
-
-        
-  //           new Notification('Hello, World please check ');
-  //   };
-
-  //   const timer = setTimeout(showNotification, 1 * 6 * 1000); // 10 minutes in milliseconds
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
-
   useEffect(() => {
-     
+
+    const storedUserDetails = JSON.parse(sessionStorage.getItem('userDetails'));
+    const unsrnameforAPI = storedUserDetails.username;
+    alert(storedUserDetails.mobnumber);
+    alert(unsrnameforAPI);
+    console.log(storedUserDetails);
     async function fetchData() {
       try {
-        const response = await fetch('http://localhost:8080/api/incDetailsForManager/Amar');
+        const response = await fetch('http://localhost:8080/api/incDetailsForManager/'+unsrnameforAPI);
         //await fetch('http://localhost:8080/api/incDetailsForManager/John Doe')
         // /http://localhost:8080/api/logout/Sachin
        // const parsedData = JSON.parse(response);
@@ -237,25 +235,37 @@ export default function Notifications() {
   
     const timer = setInterval(() => {
       // Filter the IncDetailsData based on conditions
-      const filteredIncidents = IncDetailsData.filter((incident) => {
+      const filteredIncidents = apiData.filter((incident) => {
         return (
-          incident.Status === "Open" &&
-          incident.NotificationManager === userData.userName
+          incident.notifications.status === "Open" &&
+          incident.notifications.manager === userData.userName
         );
       });
 
   
 
       // If there are matching incidents, show their IncNumbers in an alert
+      
+      let incNumbers =null;
       if (filteredIncidents.length > 0) {
-        const incNumbers = filteredIncidents
-          .map((incident) => incident.IncNumber)
+         incNumbers = filteredIncidents
+          .map((incident) => incident.notifications.incNumber)
           .join(", ");
-       // alert("these INC are in opened state  "+incNumbers);
+      
        //new Notification("Hello World");
-      new Notification("these INC are in opened state  "+incNumbers);
       }
-    }, 50 * 6 * 1000); // 1 minute in milliseconds
+      //alert("these INC are in opened state  "+incNumbers);
+ 
+      if ('Notification' in window) {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            new Notification("these INC are in opened state  "+incNumbers);   
+          }
+        });
+      } else {
+        alert('Notifications not supported');
+      }    
+    }, 1456 * 6 * 1000); // 1 minute in milliseconds
 
     return () => clearInterval(timer); // Cleanup function to clear the timer
   }, []); // Empty dependency array, effect runs only once

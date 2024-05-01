@@ -23,22 +23,19 @@ const IncidentForm = ({ raiseNewInc }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [whatsapp, Setwhatsapp] = useState(false);
   const [autoFocusField, setAutoFocusField] = useState("incNumber");
-  const phoneNumber = "7772980155"; //8527289988 +353872484431Replace with your WhatsApp phone number
+  const [phoneNumber,SetPhoneNumber] = useState(""); //8527289988 +353872484431Replace with your WhatsApp phone number
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
   const [issueOwnedBy,setIssueOwnedBy] =useState("");
   const formattedDate = currentDateTime.toLocaleDateString(); // Get formatted date
   const formattedTime = currentDateTime.toLocaleTimeString(); // Get formatted time
   const [priority,setPriority] = useState("");
   const boldText = `<strong>This text is bold</strong>`;
-  const data = ("*Below are Details for raised INC*" + "\n" + "IncNumber:- *" + incNumber +"*\nAccount :-"+account +
-  "\nUpdated/next Status:-"+statusupdate+"\nStatus:-" + status+"P1"+
-  "\nBusiness impact:-"+businessImpact + "\nWork Around:-"+workAround +
-  "\nNotification Manager:-"+ notificationManager+"\nIssue Owned By:-"+issueOwnedBy+
-   "\n"+"bridgeDeatils:-" + bridgeDeatils+"\nDate:-"+ formattedDate+"\nTime:-"+ formattedTime); // Replace with your message or data
+  const data = ("*Below are Details for raised INC*" + "\n" + "*IncNumber*:-" + incNumber +"\n*Account* :-"+account +
+  "\n*Updated/next Status*:-"+statusupdate+"\n*Status*:-" + status+
+  "\n*Business impact*:-"+businessImpact + "\n*Work Around*:-"+workAround +
+  "\n*Notification Manager*:-"+ notificationManager+"\n*Issue Owned By*:-"+issueOwnedBy+
+   "\n"+"*bridgeDeatils*:-" + bridgeDeatils+"\n*Date*:-"+ formattedDate+"\n*Time*:-"+ formattedTime+"\n*Priority*:-"+priority); // Replace with your message or data
  
-  
-
-
   const switchFocus = (field) => {
     setAutoFocusField(field);
   };
@@ -114,6 +111,13 @@ const IncidentForm = ({ raiseNewInc }) => {
     SetLoginForm(!loginForm);
     //navigate("/IncidentForm");
   }
+
+  useEffect(() => {
+    const storedUserDetails = JSON.parse(sessionStorage.getItem('userDetails'));
+    SetPhoneNumber(storedUserDetails.mobnumber);
+    // alert(storedUserDetails.mobnumber);
+
+  });
 
   const handleSubmit = (e) => {
 
@@ -352,7 +356,7 @@ autoFocus={autoFocusField === "businessImpact"}
               
             </Col>
           </Row>
-          <Button variant="Primary" type="submit" className="btn btn-primary" >Submit Deatils</Button>
+          <Button variant="Primary" type="submit" className="btn btn-primary" >Submit Details</Button>
         </Form>
       </div>)}
 
@@ -361,43 +365,66 @@ autoFocus={autoFocusField === "businessImpact"}
           <h3>Scan QR Code to Send WhatsApp Message</h3>
           {/* Call the WhatsAppQRCode component with the phoneNumber and data props */}
           <QRCode value={whatsappLink} />
-          <h3>Below are submited details ....</h3>
-               <li >
-                <strong>{"incNumber"}:</strong> {incNumber}               
-              </li> 
-              <li >
-                <strong>{"account"}:</strong> {account}         
-              </li> 
-              <li >
-                <strong>{"nextUpdate"}:</strong> {statusupdate}         
-              </li> 
-              <li >
-                <strong>{"status"}:</strong> {status}         
-              </li> 
-              <li >
-                <strong>{"businessImpact"}:</strong> {businessImpact}         
-              </li> 
-              <li >
-                <strong>{"workAround"}:</strong> {workAround}         
-              </li> 
-              <li >
-                <strong>{"manager"}:</strong> {notificationManager}         
-              </li> 
-              <li >
-                <strong>{"issueOwnedBy"}:</strong> {issueOwnedBy}         
-              </li> 
-              <li >
-                <strong>{"bridgeDetails"}:</strong> {bridgeDeatils}         
-              </li> 
-              <li >
-                <strong>{"priority"}:</strong> {priority}         
-              </li> 
-              <li >
-                <strong>{"date"}:</strong> {formattedDate}         
-              </li> 
-              <li >
-                <strong>{"Time"}:</strong> {formattedTime}         
-              </li> 
+            
+            <h3>Below are submited details ....</h3>
+            <table style={{ borderCollapse: 'collapse', border: '1px solid black',margin: 'auto' }} >
+          <tbody>
+            
+            <tr>
+              <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                <strong>{"incNumber"}:</strong> {incNumber}
+              </td>
+              <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                <strong>{"account"}:</strong> {account}
+              </td>
+            </tr>
+            
+            <tr>
+              <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                <strong>{"nextUpdate"}:</strong> {statusupdate}
+              </td>
+              <td  colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                <strong>{"status"}:</strong> {status}
+              </td>
+            </tr>
+            
+            <tr>
+              <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                <strong>{"businessImpact"}:</strong> {businessImpact}
+              </td>
+              <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                <strong>{"workAround"}:</strong> {workAround}
+              </td>
+            </tr>
+            
+            <tr>
+              <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                <strong>{"manager"}:</strong> {notificationManager}
+              </td>
+              <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                <strong>{"issueOwnedBy"}:</strong> {issueOwnedBy}
+              </td>
+            </tr>
+           
+            <tr>
+              <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                <strong>{"bridgeDetails"}:</strong> {bridgeDeatils}
+              </td>
+              <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                <strong>{"priority"}:</strong> {priority}
+              </td>
+            </tr>
+           
+            <tr>
+              <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                <strong>{"date"}:</strong> {formattedDate}
+              </td>
+              <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                <strong>{"Time"}:</strong> {formattedTime}
+              </td>
+            </tr>
+          </tbody>
+        </table>
         </div>)
       }
     </Container>
