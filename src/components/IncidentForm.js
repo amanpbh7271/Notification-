@@ -11,16 +11,12 @@ const IncidentForm = ({ raiseNewInc }) => {
   const [incNumber, setIncNumber] = useState(""); // Initialize with current inc
   const [account, setAccount] = useState(""); // Initialize with current address
   const [statusupdate, setStatusupdate] = useState(""); // Initialize with current mobile number
-  const [reportedDate, setReportedDate] = useState('');
   const [bridgeDeatils, setBridgeDeatils] = useState('');
   const [businessImpact, setBusinessImpact] = useState("");
   const [workAround, setWorkAround] = useState("");
   const [notificationManager, setNotificationManager] = useState("");
   const [status, setStatus] = useState("");
-  const [incidentDetails, setIncidentDetails] = useState('');
-  const [selectedOption, setSelectedOption] = useState('');
   const [loginForm, SetLoginForm] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
   const [whatsapp, Setwhatsapp] = useState(false);
   const [autoFocusField, setAutoFocusField] = useState("incNumber");
   const [phoneNumber,SetPhoneNumber] = useState(""); //8527289988 +353872484431Replace with your WhatsApp phone number
@@ -29,7 +25,7 @@ const IncidentForm = ({ raiseNewInc }) => {
   const formattedDate = currentDateTime.toLocaleDateString(); // Get formatted date
   const formattedTime = currentDateTime.toLocaleTimeString(); // Get formatted time
   const [priority,setPriority] = useState("");
-  const boldText = `<strong>This text is bold</strong>`;
+
   const data = ("*Below are Details for raised INC*" + "\n" + "*IncNumber*:-" + incNumber +"\n*Account* :-"+account +
   "\n*Updated/next Status*:-"+statusupdate+"\n*Status*:-" + status+
   "\n*Business impact*:-"+businessImpact + "\n*Work Around*:-"+workAround +
@@ -70,9 +66,6 @@ const IncidentForm = ({ raiseNewInc }) => {
     e.stopPropagation();
     setPriority(e.target.value);
   }
-  const handleAccountChange = (e) => {
-    setAccount(e.target.value);
-  };
   
   const handleStatusupdate = (e) => {
     e.preventDefault();
@@ -105,13 +98,6 @@ const IncidentForm = ({ raiseNewInc }) => {
   };
   //  const inputRef = useRef(null);
 
-
-
-  function openLoginForm() {
-    SetLoginForm(!loginForm);
-    //navigate("/IncidentForm");
-  }
-
   useEffect(() => {
     const storedUserDetails = JSON.parse(sessionStorage.getItem('userDetails'));
     SetPhoneNumber(storedUserDetails.mobnumber);
@@ -119,26 +105,56 @@ const IncidentForm = ({ raiseNewInc }) => {
 
   });
 
+
   const handleSubmit = (e) => {
+
+
 
     e.preventDefault();
     // Add your form submission logic here
-    console.log('INC Number:', incNumber);
-    console.log('Incident Details:', incidentDetails);
-    
+    debugger;
+    console.log('stusupdate :', statusupdate);
+    console.log('Formetted time :' , formattedTime);
+    // const newPreUpdate = {
+    //   message: statusupdate,
+    //   timestamp: formattedTime,
+    // };
 
+    // setPreUpdates(preUpdates => [...preUpdates, newPreUpdate]);
+    
+    // console.log("preUpdates"+preUpdates);
+    // console.log("newPreUpdate"+newPreUpdate);
+   
+  
+  
+    // Call addObjectToData with the new object to add it to data state
+  
+
+
+    //console.log("preupdatess message "+ preUpdates);
+    setTimeout(() => {
     axios({
       method: 'post',
       url: 'http://localhost:8080/api/saveInc',
       data: {
         "incNumber": incNumber,
-        "manager": notificationManager,
-        "date": formattedDate,
-        "time": formattedTime,
-        "bridgeDetails": bridgeDeatils,
-        "priority": "P1",
+        "account": account,
         "nextUpdate": statusupdate,
-        "status": status
+        "status": status,
+        "businessImpact":businessImpact,
+        "workAround":workAround,
+        "manager": notificationManager,
+        "issueOwnedBy":issueOwnedBy,
+        "bridgeDetails": bridgeDeatils,
+        "priority": priority,
+        "date": formattedDate,
+        "time": formattedTime,    
+         "preUpdates": [
+          {
+            "timestamp": formattedTime,
+            "message": statusupdate
+          }
+        ]
       }
     })
     .then((response) => {
@@ -146,24 +162,12 @@ const IncidentForm = ({ raiseNewInc }) => {
     }, (error) => {
       console.log(error);
     });
-    setCurrentDateTime(new Date());
+
     SetLoginForm(!loginForm);
     Setwhatsapp(!whatsapp);
-
+  }, 100);
   };
 
-
-
-
-  const handleSearch = () => {
-    // Perform search logic using the searchQuery state
-    console.log('Searching for:', searchQuery);
-  };
-
-  const [formData, setFormData] = useState({
-    selectOption: '',
-    otherField: '',
-  });
 
   const CrossIcon = styled.div`
   display: flex;
@@ -311,7 +315,7 @@ autoFocus={autoFocusField === "businessImpact"}
                 <option value="" disabled>Please select</option>
                 <option value="Bharti">Bharti</option>
                 <option value="Amar">Amar</option>
-                <option value="Amar">Sachin</option>
+                <option value="Sachin">Sachin</option>
               </Form.Select>
             </Col>
             <Col>

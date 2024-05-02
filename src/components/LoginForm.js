@@ -36,6 +36,7 @@ function LoginForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+   console.log("apiLoginData"+apiLoginData);
     if (apiLoginData && apiLoginData.username === username && apiLoginData.password === password) {
       const userDetails = {
         username: username,
@@ -51,12 +52,15 @@ function LoginForm() {
   useEffect(() => {
     async function fetchData() {
       try {
+        if(username!=''){
         const response = await fetch('http://localhost:8080/api/getUserDetails/' + username);
         const data = await response.json();
         
         setLoginApiData(data);
+        console.log("user name "+data?.username);
         setMobileNumber(data?.mobile || '');
-      } catch (error) {
+      }
+     } catch (error) {
         console.error('Error:', error);
       }
     }

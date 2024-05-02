@@ -24,7 +24,8 @@ export default function IncDetails({ data, handleCloseInc }) {
 
   const [incNumber, setIncNumber] = useState(""); // Initialize with current inc
   const [account, setAccount] = useState(""); // Initialize with current address
-  const [preStatusUpdate, setPreStatusUpdate] = useState("");
+  const [preStatusUpdate, setPreStatusUpdate] = useState([]);
+ // const [preupdates, setPreupdates] = useState([]);
   const [statusupdate, setStatusupdate] = useState(""); // Initialize with current mobile number
   const [reportedDate,setReportedDate] = useState('');
   const [bridgeDeatils,setBridgeDeatils] =useState("");
@@ -40,14 +41,15 @@ export default function IncDetails({ data, handleCloseInc }) {
   const [phoneNumber,setPhoneNumber] = useState(""); //8527289988 +353872484431Replace with your WhatsApp phone number
   const [incForm, SetIncForm] = useState(true);
   const [whatsappForUpdate, SetwhatsappUpdate] = useState(false);
-
+  
   const dataforWhatsapp = ("*Below are Details for raised INC*" + "\n" + "*IncNumber*:- " + incNumber +"\n*Account* :-"+account +
-  "\n*Updated/next Status*:-"+statusupdate+"\n*Status*:-" + status+
+  "\n*Updated/next Status*:-\n" + preStatusUpdate.map(update => `${update.timestamp} -- ${update.message}`).join("\n") +
+  "\n*Status*:-" + status +
   "\n*Business impact*:-"+businessImpact + "\n*Work Around*:-"+workAround +
   "\n*Notification Manager*:-"+ notificationManager+"\n*Issue Owned By*:-"+issueOwnedBy+
-   "\n"+"*bridgeDeatils*:-" + bridgeDeatils+"\n*Date*:-"+ formattedDate+"\n*Time*:-"+ formattedTime+
-   "\n*priority*"+priority
-  ); // Replace with your message or data
+  "\n"+"*bridgeDeatils*:-" + bridgeDeatils+"\n*Date*:-"+ formattedDate+"\n*Time*:-"+ formattedTime+
+  "\n*priority*:-"+priority
+); // Replace with your message or data
  
   
 
@@ -55,25 +57,28 @@ export default function IncDetails({ data, handleCloseInc }) {
    
       const storedUserDetails = JSON.parse(sessionStorage.getItem('userDetails'));
       setPhoneNumber(storedUserDetails.mobnumber);
-      alert(storedUserDetails.mobnumber);
-  
+    //  alert(storedUserDetails.mobnumber);
     
     
     if (data) {
+      console.log("data in incDetails"+data);
       setIncNumber(data?.[0]?.notifications.incNumber);
       setBridgeDeatils(data?.[0]?.notifications.bridgeDetails);
       setAccount(data?.[0]?.notifications.account);
-     // setStatusupdate(data?.[0]?.notifications.nextUpdate);
+      setStatusupdate(data?.[0]?.notifications.nextUpdate);
       setReportedDate(data?.[0]?.ReportedDate);
-      setPreStatusUpdate(data?.[0]?.notifications.nextUpdate);
+      setPreStatusUpdate(data?.[0]?.notifications.preUpdates || []);
       setBusinessImpact(data?.[0]?.notifications.businessImpact);
       setWorkAround(data?.[0]?.notifications.workAround);
       setNotificationManager(data?.[0]?.notifications.manager);
       setStatus(data?.[0]?.notifications.status);
       setPriority(data?.[0]?.notifications.priority);
       setIssueOwnedBy(data?.[0]?.notifications.issueOwnedBy);
+      console.log("presupdatestus"+preStatusUpdate);
     }
   }, [data]);
+
+
 
  
   const handlePriorty = (e) =>{
@@ -90,6 +95,7 @@ export default function IncDetails({ data, handleCloseInc }) {
   const handleWorkAround = (e)=> setWorkAround(e.target.value);
   const handleStatus = (e)=> setStatus(e.target.value);
   const hadnlenotificationManager = (e) => setNotificationManager(e.target.value);
+  const handleSetPreStatusUpdate =(e) => setPreStatusUpdate(e.target.value);
 
   // Event handlers for input changes
   //const handleNameChange = (e) => setName(e.target.value);
@@ -99,7 +105,10 @@ export default function IncDetails({ data, handleCloseInc }) {
 
 
   const handleSubmit = (e) => {
-    const updatedStatus = statusupdate + "/n" + preStatusUpdate; 
+   // const updatedStatus = statusupdate + "/n" + preStatusUpdate; 
+
+    console.log("value for preStatusUpdate"+preStatusUpdate);
+    const updatedPreStatusUpdate = [...preStatusUpdate, { timestamp: formattedTime, message: statusupdate }];
     e.preventDefault();
     axios({
       method: 'post',
@@ -107,7 +116,6 @@ export default function IncDetails({ data, handleCloseInc }) {
       data: {
         "incNumber": incNumber,
         "account": account,
-        "nextUpdate": updatedStatus,
         "status":status,
         "businessImpact":businessImpact,
         "workAround":workAround,
@@ -117,6 +125,8 @@ export default function IncDetails({ data, handleCloseInc }) {
         "priority": priority,
         "date": formattedDate,
         "time": formattedTime,
+        "preUpdates":updatedPreStatusUpdate,
+        "nextUpdate":statusupdate
         
       }
     })
@@ -125,6 +135,9 @@ export default function IncDetails({ data, handleCloseInc }) {
     }, (error) => {
       console.log(error);
     });
+
+     // Update state with the new preStatusUpdate array
+    setPreStatusUpdate(updatedPreStatusUpdate);
     SetIncForm(!incForm);
     SetwhatsappUpdate(!whatsappForUpdate);
     
@@ -236,7 +249,18 @@ export default function IncDetails({ data, handleCloseInc }) {
                 <option value="P2">P2</option>
               </Form.Select>
           </Col>
-        </Row>
+          </Row>
+          <Row>
+           <Col>
+              <Form.Label>Pre Status Details</Form.Label>
+              <textarea
+                rows={4} // Set the number of visible text lines
+                cols={50} // Set the number of visible text columns
+                value={preStatusUpdate.map(update => `${update.timestamp} -- ${update.message}`).join("\n")}
+                readOnly // Make the textarea readonly to prevent editing
+    />
+           </Col>
+          </Row>
         <Button variant="Primary" type="submit" className="btn btn-primary" >Update Datails</Button>
       </Form>
      

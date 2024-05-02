@@ -199,8 +199,6 @@ export default function Notifications() {
 
     const storedUserDetails = JSON.parse(sessionStorage.getItem('userDetails'));
     const unsrnameforAPI = storedUserDetails.username;
-    alert(storedUserDetails.mobnumber);
-    alert(unsrnameforAPI);
     console.log(storedUserDetails);
     async function fetchData() {
       try {
@@ -209,7 +207,7 @@ export default function Notifications() {
         // /http://localhost:8080/api/logout/Sachin
        // const parsedData = JSON.parse(response);
         //const data = await response.json();
-       // alert(parsedData);
+      
 
       const clonedResponse = response.clone(); // Clone the response
       const data = await clonedResponse.json();
@@ -252,9 +250,8 @@ export default function Notifications() {
           .map((incident) => incident.notifications.incNumber)
           .join(", ");
       
-       //new Notification("Hello World");
       }
-      //alert("these INC are in opened state  "+incNumbers);
+   
  
       if ('Notification' in window) {
         Notification.requestPermission().then((permission) => {
