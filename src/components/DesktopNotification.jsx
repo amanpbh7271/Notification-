@@ -14,6 +14,7 @@ function DesktopNotification() {
       }
     };
 
+    
     const timer = setTimeout(showNotification, 1 * 6 * 1000); // 10 minutes in milliseconds
 
     return () => clearTimeout(timer);

@@ -17,6 +17,7 @@ const Header = styled.div`
 
 const HeaderContent = styled.span`
   color: white;
+  font-size: 18px;
 `;
 
 function LoginForm() {
@@ -75,11 +76,11 @@ function LoginForm() {
   return (
     <Container>
       <Header>
-        <HeaderContent>Incident Notifications</HeaderContent>
-        <HeaderContent>Join Incident Bridge</HeaderContent>
+        <HeaderContent>Incident Blast</HeaderContent>
+        <HeaderContent>Logout</HeaderContent>
       </Header>
 
-      <div className="login-form-container" style={{ marginTop: '100px' }}>
+      <div className="login-form-container" style={{ marginTop: '100px'}}>
         <img src={amodocs} alt="Logo" className="login-logo" />
         <form onSubmit={handleSubmit}>
           <div className="form-group">

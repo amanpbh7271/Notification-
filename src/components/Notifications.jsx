@@ -19,20 +19,30 @@ const Header = styled.div`
 
 const HeaderContent = styled.span`
   color: white;
+  font-size: 18px;
 `;
 
 const SearchAndContentWrp = styled.div`
   display: flex;
+  
 `;
 
 const LeftContent = styled.div`
   height: 100%;
-  width: 25%;
+  width: 20%;
   margin: 0.5rem;
+  padding: 0.5rem; /* Add padding */
   background-color: white;
 `;
 
-const RightContent = styled.div``;
+const RightContent = styled.div`
+
+flex: 1 1 60%; 
+display: flex;
+  justify-content: center; /* Horizontally center the content */ 
+  margin: 0.5rem; /* Add margin */
+  padding: 0.5rem; /* Add padding */
+`;
 
 const ListOfInc = styled.div`
   overflow-y: scroll;
@@ -44,6 +54,7 @@ const ParticularInc = styled.div`
   background-color: #f0f0f0;
   margin: 10px;
   cursor: pointer;
+  border: 5px outset #d1c1c1;
 `;
 
 const ItemName = styled.div``;
@@ -173,6 +184,9 @@ export default function Notifications() {
 
   const handleCurrentInc = (incId) => {
     
+    if(newInc != false)
+    setNewInc(!newInc);
+
     console.log('apidata in handlecurretn inc' +apiData);
 
     const filteredData = apiData.filter(
@@ -187,16 +201,21 @@ export default function Notifications() {
   };
 
   const handleCloseInc = () => {
+    if(newInc != false)
+      setNewInc(!newInc);
     setCurrentInc(null);
   };
 
   function raiseNewInc (){
+    if(currentInc!=null)
+      setCurrentInc(null);
     setNewInc(!newInc);
     //navigate("/IncidentForm");
   }
 
   useEffect(() => {
 
+    
     const storedUserDetails = JSON.parse(sessionStorage.getItem('userDetails'));
     const unsrnameforAPI = storedUserDetails.username;
     console.log(storedUserDetails);
@@ -236,7 +255,7 @@ export default function Notifications() {
       const filteredIncidents = apiData.filter((incident) => {
         return (
           incident.notifications.status === "Open" &&
-          incident.notifications.manager === userData.userName
+          incident.notifications.manager === unsrnameforAPI
         );
       });
 
@@ -272,8 +291,8 @@ export default function Notifications() {
   return (
     <Container>
       <Header>
-        <HeaderContent>Incident Notifications</HeaderContent>
-        <HeaderContent>Join Incident Bridge</HeaderContent>
+        <HeaderContent>Incident Blast</HeaderContent>
+        <HeaderContent>Logout</HeaderContent>
       </Header>
       <SearchAndContentWrp>
         <LeftContent>

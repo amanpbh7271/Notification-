@@ -6,6 +6,59 @@ import QRCode from "qrcode.react";
 
 import axios from 'axios';
 
+const CrossIcon = styled.div`
+display: flex;
+justify-content: flex-end;
+`;
+
+const Header = styled.div`
+width: 100%;
+display: flex;
+justify-content: space-between;
+background-color: #00c3ffd9;
+padding: 12px;
+`;
+
+const HeaderContent = styled.span`
+color: white;
+font-size: 18px;
+`;
+
+const Container = styled.div`
+  color: black;
+  margin: 20px auto;
+  padding: 20px;
+  width: 100%;
+  max-width: 10000px;
+  background-color: #faf9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+`;
+
+const StyledButton = styled(Button)`
+  margin-top: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const StyledFormControl = styled(FormControl)`
+  margin-bottom: 10px;
+`;
+
+const StyledFormLabel = styled(Form.Label)`
+  font-weight: bold;
+`;
+
+
 const IncidentForm = ({ raiseNewInc }) => {
 
   const [incNumber, setIncNumber] = useState(""); // Initialize with current inc
@@ -169,21 +222,7 @@ const IncidentForm = ({ raiseNewInc }) => {
   };
 
 
-  const CrossIcon = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
 
-  const Container = styled.div`
-    color: black;
-    margin: 20px auto;
-    padding: 20px;
-    width: 100%;
-    max-width: 10000px;
-    background-color: #faf9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-`;
 
 
   // Function to generate WhatsApp message link
@@ -195,10 +234,16 @@ const IncidentForm = ({ raiseNewInc }) => {
   const whatsappLink = generateWhatsAppLink();
   return (
 
-    <Container style={{ marginLeft: '100px' }}>
+    <Container >
+       
+       <Header>
+       <HeaderContent>Please Enter Incident Details</HeaderContent>
+       <CrossIcon onClick={raiseNewInc}>X</CrossIcon>
 
-      <CrossIcon onClick={raiseNewInc}>X</CrossIcon>
+      </Header>
 
+      
+      
       {/* <InputGroup className="mb-3">
       <FormControl
         placeholder="Search"
@@ -215,7 +260,7 @@ const IncidentForm = ({ raiseNewInc }) => {
 
       {loginForm && (<div>
 
-        <h4>Please Enter Incident Details</h4>
+
 
 
         <Form onSubmit={handleSubmit}>
@@ -360,7 +405,8 @@ autoFocus={autoFocusField === "businessImpact"}
               
             </Col>
           </Row>
-          <Button variant="Primary" type="submit" className="btn btn-primary" >Submit Details</Button>
+          <StyledButton variant="primary" type="submit">Submit Details</StyledButton>
+          
         </Form>
       </div>)}
 

@@ -4,6 +4,8 @@ import { Form, Row, Col } from 'react-bootstrap';
 import { Button, InputGroup, FormControl } from 'react-bootstrap';
 import axios from "axios";
 import QRCode from "qrcode.react";
+
+
 const Container = styled.div`
     color: black;
     margin: 20px auto;
@@ -62,18 +64,18 @@ export default function IncDetails({ data, handleCloseInc }) {
     
     if (data) {
       console.log("data in incDetails"+data);
-      setIncNumber(data?.[0]?.notifications.incNumber);
-      setBridgeDeatils(data?.[0]?.notifications.bridgeDetails);
-      setAccount(data?.[0]?.notifications.account);
-      setStatusupdate(data?.[0]?.notifications.nextUpdate);
-      setReportedDate(data?.[0]?.ReportedDate);
+      setIncNumber(data?.[0]?.notifications.incNumber||'');
+      setBridgeDeatils(data?.[0]?.notifications.bridgeDetails||'');
+      setAccount(data?.[0]?.notifications.account|'');
+      setStatusupdate(data?.[0]?.notifications.nextUpdate||'');
+      setReportedDate(data?.[0]?.ReportedDate||'');
       setPreStatusUpdate(data?.[0]?.notifications.preUpdates || []);
-      setBusinessImpact(data?.[0]?.notifications.businessImpact);
-      setWorkAround(data?.[0]?.notifications.workAround);
-      setNotificationManager(data?.[0]?.notifications.manager);
-      setStatus(data?.[0]?.notifications.status);
-      setPriority(data?.[0]?.notifications.priority);
-      setIssueOwnedBy(data?.[0]?.notifications.issueOwnedBy);
+      setBusinessImpact(data?.[0]?.notifications.businessImpact ||'');
+      setWorkAround(data?.[0]?.notifications.workAround||'');
+      setNotificationManager(data?.[0]?.notifications.manager||'');
+      setStatus(data?.[0]?.notifications.status||'');
+      setPriority(data?.[0]?.notifications.priority||'');
+      setIssueOwnedBy(data?.[0]?.notifications.issueOwnedBy|'');
       console.log("presupdatestus"+preStatusUpdate);
     }
   }, [data]);
@@ -152,7 +154,7 @@ export default function IncDetails({ data, handleCloseInc }) {
     const whatsappLink = generateWhatsAppLink();
 
   return (
-    <Container className="container mt-3" style={{ marginLeft: '100px' }}>
+    <Container className="container mt-3" >
       <CrossIcon onClick={handleCloseInc}>X</CrossIcon>
       
       {incForm && (<div>
@@ -161,7 +163,9 @@ export default function IncDetails({ data, handleCloseInc }) {
           <Row className="mb-3">
           <Col>
             <Form.Label>Inc Number</Form.Label>
-            <Form.Control type="text" value={incNumber} />
+            <Form.Control type="text" value={incNumber} 
+            readOnly
+            />
           </Col>
           <Col>
             <Form.Label>Account</Form.Label>
@@ -277,16 +281,16 @@ export default function IncDetails({ data, handleCloseInc }) {
             
             <tr>
               <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                <strong>{"incNumber"}:</strong> {incNumber}
+                <strong>{"Inc Number"}:</strong> {incNumber}
               </td>
               <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                <strong>{"account"}:</strong> {account}
+                <strong>{"Account"}:</strong> {account}
               </td>
             </tr>
             
             <tr>
               <td colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                <strong>{"nextUpdate"}:</strong> {statusupdate}
+                <strong>{"Next Update"}:</strong> {statusupdate}
               </td>
               <td  colSpan="2" style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                 <strong>{"status"}:</strong> {status}
