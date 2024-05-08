@@ -5,21 +5,27 @@ import { Button } from 'react-bootstrap';
 import IncidentForm from './IncidentForm.js';
 import { useParams } from 'react-router-dom';
 import axios from "axios";
+import logout from './amdocs_2.png';
+
 const Container = styled.div`
-  background-color: #d3d3d3;
+  background-image: url('amdocs_2.png');
+  background-size: cover; /* or contain, depending on your preference */
 `;
 
+
 const Header = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  background-color: #00c3ffd9;
-  padding: 12px;
+width: 100%;
+display: flex;
+justify-content: space-between;
+background: #36454f;
+padding: 12px;
 `;
 
 const HeaderContent = styled.span`
-  color: white;
-  font-size: 18px;
+color: white;
+font-size: 18px;
+vertical-align: middle;
+margin-right: 5px
 `;
 
 const SearchAndContentWrp = styled.div`
@@ -33,6 +39,7 @@ const LeftContent = styled.div`
   margin: 0.5rem;
   padding: 0.5rem; /* Add padding */
   background-color: white;
+  border-radius: 10px; /* Adjust the value to control the roundness */
 `;
 
 const RightContent = styled.div`
@@ -67,6 +74,7 @@ const SearchField = styled.input`
   width: 100%;
   padding: 4px;
 `;
+
 
 export default function Notifications() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -281,7 +289,7 @@ export default function Notifications() {
       } else {
         alert('Notifications not supported');
       }    
-    }, 1456 * 6 * 1000); // 1 minute in milliseconds
+    }, 196 * 6 * 1000); // 1 minute in milliseconds
 
     return () => clearInterval(timer); // Cleanup function to clear the timer
   }, []); // Empty dependency array, effect runs only once
@@ -292,16 +300,21 @@ export default function Notifications() {
     <Container>
       <Header>
         <HeaderContent>Incident Blast</HeaderContent>
+        <HeaderContent ><img src={logout}
+       style={{ padding: '5px' ,height:'5vh'}}/></HeaderContent>
         <HeaderContent>Logout</HeaderContent>
       </Header>
       <SearchAndContentWrp>
         <LeftContent>
+      
           <SearchField
-            type="text"
-            placeholder="Search by ID"
-            value={searchTerm}
-            onChange={handleSearch}
-          />
+  type="text"
+  placeholder="Search by ID"
+  value={searchTerm}
+  onChange={handleSearch}
+  style={{ marginBottom: "0.5rem" }} // Add margin-bottom to create a gap
+/>
+
         <Button onClick={ raiseNewInc }>New INC</Button>
           <ListOfInc style={{ height: "500px", overflow: "auto" }}>
             {searchTerm === ""

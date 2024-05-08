@@ -4,7 +4,7 @@ import { Form, Row, Col } from 'react-bootstrap';
 import { Button, InputGroup, FormControl } from 'react-bootstrap';
 import axios from "axios";
 import QRCode from "qrcode.react";
-
+import CopyButton from "./CopyCode";
 
 const Container = styled.div`
     color: black;
@@ -20,6 +20,37 @@ const CrossIcon = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
+
+const Header = styled.div`
+width: 100%;
+background-color: #007bff;
+display: flex;
+justify-content: space-between;
+border-radius: 10px; /* Adjust the value to control the roundness */
+padding: 12px;
+margin-bottom: 10px;
+`;
+
+const HeaderContent = styled.span`
+color: white;
+font-size: 18px;
+`;
+
+const StyledButton = styled(Button)`
+  margin-top: 10px;
+
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background: linear-gradient(90deg, #FFC30A 0.05%, #F66549 48.49%, #EC008C 100.06%);
+  /* &:hover {
+     background-color: #218838; /* Darker shade of green on hover */
+   }  */
+`;
+
 export default function IncDetails({ data, handleCloseInc }) {
   //   {data.map((item) => (
   console.log('data in indetails '+data);
@@ -110,7 +141,9 @@ export default function IncDetails({ data, handleCloseInc }) {
    // const updatedStatus = statusupdate + "/n" + preStatusUpdate; 
 
     console.log("value for preStatusUpdate"+preStatusUpdate);
-    const updatedPreStatusUpdate = [...preStatusUpdate, { timestamp: formattedTime, message: statusupdate }];
+   // const updatedPreStatusUpdate = [...preStatusUpdate, { timestamp: formattedTime, message: statusupdate }];
+    const updatedPreStatusUpdate = [{ timestamp: formattedTime, message: statusupdate }, ...preStatusUpdate];
+
     e.preventDefault();
     axios({
       method: 'post',
@@ -139,6 +172,10 @@ export default function IncDetails({ data, handleCloseInc }) {
     });
 
      // Update state with the new preStatusUpdate array
+
+    //  const reversedPreStatusUpdate = [...updatedPreStatusUpdate].reverse();
+    // setPreStatusUpdate(reversedPreStatusUpdate);
+
     setPreStatusUpdate(updatedPreStatusUpdate);
     SetIncForm(!incForm);
     SetwhatsappUpdate(!whatsappForUpdate);
@@ -155,9 +192,12 @@ export default function IncDetails({ data, handleCloseInc }) {
 
   return (
     <Container className="container mt-3" >
-      <CrossIcon onClick={handleCloseInc}>X</CrossIcon>
       
       {incForm && (<div>
+        <Header>
+        <HeaderContent>Please Update Incident Details</HeaderContent>
+        <CrossIcon onClick={handleCloseInc}>X</CrossIcon>
+        </Header>
       <Form style={{ marginTop: '20px'}} onSubmit={handleSubmit}>
      
           <Row className="mb-3">
@@ -180,7 +220,9 @@ export default function IncDetails({ data, handleCloseInc }) {
         <Row className="mb-3">
           <Col>
             <Form.Label>Status Upadate/Next Step</Form.Label>
-            <Form.Control type="text" value={statusupdate} onChange={handleStatusupdate}/>
+            <Form.Control type="text" value={statusupdate} onChange={handleStatusupdate}
+            style={{ height: "50px", fontSize: "1.0rem" }}
+            />
           </Col>
           <Col>
             <Form.Label>Add Status Update</Form.Label>
@@ -202,15 +244,21 @@ export default function IncDetails({ data, handleCloseInc }) {
         <Row className="mb-3">
           <Col>
             <Form.Label>Business Impact</Form.Label>
-            <Form.Control type="text" value={businessImpact} onChange={handleBusinessImpact}/>
+            <Form.Control type="text" value={businessImpact} onChange={handleBusinessImpact}
+            style={{ height: "50px", fontSize: "1.0rem" }}
+            />
           </Col>
           <Col>
             <Form.Label>Work around</Form.Label>
-            <textarea
-                        rows={4} // Set the number of visible text lines
-                        cols={20} // Set the number of visible text columns
-                        
-                   value={workAround} onChange={handleWorkAround}/>
+            <Form.Control as="textarea" type="text" 
+  
+               value={workAround}
+                onChange={handleWorkAround}
+               
+                  style={{ height: "50px", fontSize: "1.0rem" }}
+              />
+            
+         
           </Col>
 
         </Row>
@@ -239,7 +287,9 @@ export default function IncDetails({ data, handleCloseInc }) {
         <Row className="mb-3">
           <Col>
           <Form.Label>Bridge details</Form.Label>
-          <Form.Control type="text" value={bridgeDeatils} onChange={handleBridgeDeatils}/>
+          <Form.Control type="text" value={bridgeDeatils} onChange={handleBridgeDeatils}
+          style={{ height: "50px", fontSize: "1.0rem" }}
+          />
           </Col>
           <Col>
             
@@ -265,17 +315,32 @@ export default function IncDetails({ data, handleCloseInc }) {
     />
            </Col>
           </Row>
-        <Button variant="Primary" type="submit" className="btn btn-primary" >Update Datails</Button>
+          <Row className="mb-3">
+  <Col></Col> {/* Empty column to offset */}
+  <Col xs={3}> {/* Col with width set to 6 out of 12 */}
+    <StyledButton variant="Success" type="submit" className="w-100">Update Details</StyledButton>
+  </Col>
+  <Col></Col> {/* Empty column to offset */}
+</Row>
       </Form>
      
     </div>)}
       
     { whatsappForUpdate && (
         <div>
-          <h3>Scan QR Code to Send WhatsApp Message</h3>
+          <Header>
+        <HeaderContent>Scan QR Code to Send WhatsApp Message</HeaderContent>
+        <CrossIcon onClick={handleCloseInc}>X</CrossIcon>
+        </Header>
           {/* Call the WhatsAppQRCode component with the phoneNumber and data props */}
-          <QRCode value={whatsappLink} />
-          <h3>Below are submited details ....</h3>
+          <QRCode value={whatsappLink}  style={{ marginTop: '20px' }}/>
+           
+
+          <Header>
+        <HeaderContent>Below are submited details</HeaderContent>
+        <CopyButton code={dataforWhatsapp} />        
+        </Header>
+
           <table style={{ borderCollapse: 'collapse', border: '1px solid black',margin: 'auto' }} >
           <tbody>
             

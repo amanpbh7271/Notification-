@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Button, InputGroup, FormControl } from 'react-bootstrap';
 import QRCode from "qrcode.react";
 
+import CopyButton from "./CopyCode";
 import axios from 'axios';
 
 const CrossIcon = styled.div`
@@ -13,10 +14,12 @@ justify-content: flex-end;
 
 const Header = styled.div`
 width: 100%;
+background-color: #007bff;
 display: flex;
 justify-content: space-between;
-background-color: #00c3ffd9;
+border-radius: 10px; /* Adjust the value to control the roundness */
 padding: 12px;
+margin-bottom: 10px;
 `;
 
 const HeaderContent = styled.span`
@@ -37,18 +40,19 @@ const Container = styled.div`
 
 const StyledButton = styled(Button)`
   margin-top: 10px;
-  background-color: #007bff;
+
   color: white;
   border: none;
   border-radius: 5px;
-  padding: 10px 20px;
+  padding: 10px 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  
-  &:hover {
-    background-color: #0056b3;
-  }
+  background: linear-gradient(90deg, #FFC30A 0.05%, #F66549 48.49%, #EC008C 100.06%);
+  /* &:hover {
+     background-color: #218838; /* Darker shade of green on hover */
+   }  */
 `;
+
 
 const StyledFormControl = styled(FormControl)`
   margin-bottom: 10px;
@@ -223,7 +227,11 @@ const IncidentForm = ({ raiseNewInc }) => {
 
 
 
-
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent form submission on Enter key press without Shift key
+    }
+  };
 
   // Function to generate WhatsApp message link
   const generateWhatsAppLink = () => {
@@ -236,11 +244,7 @@ const IncidentForm = ({ raiseNewInc }) => {
 
     <Container >
        
-       <Header>
-       <HeaderContent>Please Enter Incident Details</HeaderContent>
-       <CrossIcon onClick={raiseNewInc}>X</CrossIcon>
-
-      </Header>
+       
 
       
       
@@ -260,10 +264,14 @@ const IncidentForm = ({ raiseNewInc }) => {
 
       {loginForm && (<div>
 
+        <Header>
+       <HeaderContent>Please Enter Incident Details</HeaderContent>
+       <CrossIcon onClick={raiseNewInc}>X</CrossIcon>
+
+      </Header>
 
 
-
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} >
 
           <Row className="mb-3">
             <Col>
@@ -297,12 +305,14 @@ const IncidentForm = ({ raiseNewInc }) => {
           <Row className="mb-3">
             <Col>
               <Form.Label>Status Upadate/Next Step</Form.Label>
-              <Form.Control type="text" placeholder="Enter Status Upadate/Next step"
-                value={statusupdate}
+              <Form.Control  as="textarea" type="text" placeholder="Enter Status Upadate/Next step"
+  
+               value={statusupdate}
                 onChange={handleStatusupdate}
-                
+               
                 autoFocus={autoFocusField === "statusupdate"}
                   onFocus={() => switchFocus("statusupdate")}
+                  style={{ height: "50px", fontSize: "1.0rem" }}
               />
             </Col>
             <Col>
@@ -325,24 +335,25 @@ const IncidentForm = ({ raiseNewInc }) => {
           <Row className="mb-3">
             <Col>
               <Form.Label>Business Impact</Form.Label>
-              <Form.Control type="text" placeholder="Wnter Business Impact"
-
-value={businessImpact}
-onChange={handleBusinessImpact}
-
-autoFocus={autoFocusField === "businessImpact"}
+              <Form.Control as="textarea"
+  type="text"
+  placeholder="Enter Business Impact"
+  value={businessImpact}
+  onChange={handleBusinessImpact}
+  autoFocus={autoFocusField === "businessImpact"}
   onFocus={() => switchFocus("businessImpact")}
-
-              />
+  style={{ height: "50px", fontSize: "1.0rem" }} // Add this line
+/>
             </Col>
             <Col>
               <Form.Label>Work around</Form.Label>
-              <Form.Control type="text" placeholder="Enter Work around" 
+              <Form.Control as="textarea" type="text" placeholder="Enter Work around" 
               value={workAround}
               onChange={handleWorkAround}
               
               autoFocus={autoFocusField === "workAround"}
                 onFocus={() => switchFocus("workAround")}
+                style={{ height: "50px", fontSize: "1.0rem" }}
               />
             </Col>
 
@@ -381,12 +392,13 @@ autoFocus={autoFocusField === "businessImpact"}
           <Col>
             <Form.Label>Bridge deatils</Form.Label>
 
-            <Form.Control type="text" placeholder="Enter Bridge deatils"
+            <Form.Control as="textarea" type="text" placeholder="Enter Bridge deatils"
                    value={bridgeDeatils}
                    onChange={handleBridgeDeatils}
                    
                    autoFocus={autoFocusField === "bridgeDeatils"}
                      onFocus={() => switchFocus("bridgeDeatils")}
+                     style={{ height: "50px", fontSize: "1.0rem" }}
                 
             />
             </Col>
@@ -405,18 +417,33 @@ autoFocus={autoFocusField === "businessImpact"}
               
             </Col>
           </Row>
-          <StyledButton variant="primary" type="submit">Submit Details</StyledButton>
+          <Row className="mb-3">
+  <Col></Col> {/* Empty column to offset */}
+  <Col xs={3}> {/* Col with width set to 6 out of 12 */}
+    <StyledButton variant="Success" type="submit" className="w-100">Submit Details</StyledButton>
+  </Col>
+  <Col></Col> {/* Empty column to offset */}
+</Row>
+         
           
         </Form>
       </div>)}
 
       {whatsapp && (
         <div>
-          <h3>Scan QR Code to Send WhatsApp Message</h3>
+          <Header>
+       <HeaderContent>Scan QR Code to Send WhatsApp Message</HeaderContent>
+       <CrossIcon onClick={raiseNewInc}>X</CrossIcon>
+
+      </Header>
           {/* Call the WhatsAppQRCode component with the phoneNumber and data props */}
           <QRCode value={whatsappLink} />
-            
-            <h3>Below are submited details ....</h3>
+
+          <Header>
+        <HeaderContent>Below are submited details</HeaderContent>
+        <CopyButton code={data} />        
+        </Header>
+          
             <table style={{ borderCollapse: 'collapse', border: '1px solid black',margin: 'auto' }} >
           <tbody>
             
